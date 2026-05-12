@@ -12,6 +12,8 @@ import { searchAll, getSearchTerms, BookResult } from '../services/bookService';
 interface ProfilePageProps {
   onNavigate: (page: string) => void;
   onRead?: (url: string | ArrayBuffer, title: string) => void;
+  openAddForm?: boolean;
+  onCloseAddForm?: () => void;
 }
 
 interface BookSuggestion extends BookResult {}
@@ -39,7 +41,7 @@ const CONDITION_STYLES: Record<string, { label: string }> = {
 
 
 
-export default function ProfilePage({ onNavigate, onRead }: ProfilePageProps) {
+export default function ProfilePage({ onNavigate, onRead, openAddForm, onCloseAddForm }: ProfilePageProps) {
   const [user, setUser] = useState<any>(null);
   const [profileTab, setProfileTab] = useState<ProfileTab>('overview');
   const [libraryTab, setLibraryTab] = useState<LibraryTab>('physical');
@@ -76,6 +78,15 @@ export default function ProfilePage({ onNavigate, onRead }: ProfilePageProps) {
   const [showRecentActivity, setShowRecentActivity] = useState(false);
   const [showRankMatrix, setShowRankMatrix] = useState(false);
   const { location: userLocation } = useContext(LocationContext);
+
+  useEffect(() => {
+    if (openAddForm) {
+      setProfileTab('library');
+      setShowAddForm(true);
+      setAddStep(1);
+      onCloseAddForm?.();
+    }
+  }, [openAddForm, onCloseAddForm]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {

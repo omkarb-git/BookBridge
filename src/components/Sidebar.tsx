@@ -1,4 +1,4 @@
-import { Home, User, ArrowLeftRight, MessageSquare, BookOpen, Trophy, LogOut, ChevronRight, BookMarked } from 'lucide-react';
+import { Home, User, ArrowLeftRight, MessageSquare, BookOpen, Trophy, LogOut, ChevronRight, BookMarked, Plus } from 'lucide-react';
 
 interface SidebarProps {
   currentPage: string;
@@ -114,6 +114,26 @@ export default function Sidebar({ currentPage, onNavigate, onLogout, isOpen, use
               </button>
             );
           })}
+          
+          {/* Add Book Button */}
+          <button
+            onClick={() => {
+              onNavigate('profile-add-book');
+              if (window.innerWidth < 1024) onClose?.();
+            }}
+            className={`
+              w-full flex items-center gap-3 px-4 py-3 mt-2 transition-all duration-200 group
+              ${isOpen ? '' : 'lg:justify-center'}
+              active:scale-95
+              text-[var(--c-emerald)] font-bold nm-flat hover:nm-inset
+            `}
+            title={!isOpen ? 'Add Book' : undefined}
+          >
+            <Plus size={20} className="flex-shrink-0 text-[var(--c-emerald)]" />
+            {isOpen && (
+              <span className="text-sm flex-1 text-left uppercase tracking-tight">Add Book</span>
+            )}
+          </button>
         </nav>
 
         {isOpen && (

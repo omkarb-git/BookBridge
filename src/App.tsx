@@ -75,6 +75,7 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 1024);
   const [scrollTarget, setScrollTarget] = useState<string | null>(null);
   const [readingBook, setReadingBook] = useState<{ url: string | ArrayBuffer; title: string } | null>(null);
+  const [profileAddFormOpen, setProfileAddFormOpen] = useState(false);
 
   // Geolocation — only starts when user is authenticated
   const { location, loading: geoLoading, error: geoError } = useGeolocation(
@@ -126,6 +127,12 @@ export default function App() {
   }, []);
 
   const handleNavigate = (page: string) => {
+    if (page === 'profile-add-book') {
+      setCurrentPage('profile');
+      setProfileAddFormOpen(true);
+      return;
+    }
+
     // Handle landing page section scrolling
     if (LANDING_SCROLL_MAP[page] && !isAuthenticated) {
       setCurrentPage(page as Page);
@@ -241,6 +248,8 @@ export default function App() {
                   setReadingBook({ url, title });
                   setCurrentPage('read');
                 }} 
+                openAddForm={profileAddFormOpen}
+                onCloseAddForm={() => setProfileAddFormOpen(false)}
               />
             )}
             {currentPage === 'exchanges' && <ExchangesPage onNavigate={handleNavigate} />}
