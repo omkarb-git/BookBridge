@@ -16,7 +16,7 @@ import ResourcesPage from './pages/ResourcesPage';
 import { BookMarked, BookOpen } from 'lucide-react';
 import { auth, db } from './lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, getDocs, collection } from 'firebase/firestore';
 import { useGeolocation } from './hooks/useGeolocation';
 
 type Page =
@@ -77,6 +77,7 @@ export default function App() {
   const [scrollTarget, setScrollTarget] = useState<string | null>(null);
   const [readingBook, setReadingBook] = useState<{ url: string | ArrayBuffer; title: string } | null>(null);
   const [profileAddFormOpen, setProfileAddFormOpen] = useState(false);
+  const [stats, setStats] = useState({ books: 0, cities: 0, swaps: 0 });
 
   // Geolocation — only starts when user is authenticated
   const { location, loading: geoLoading, error: geoError } = useGeolocation(
@@ -125,6 +126,35 @@ export default function App() {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Fetch real data for counters
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const booksSnap = await getDocs(collection(db, 'books'));
+        const usersSnap = await getDocs(collection(db, 'users'));
+        const exchangesSnap = await getDocs(collection(db, 'exchanges'));
+        
+        // Derived cities
+        const userCities = usersSnap.docs.map(d => d.data().city?.split(',')[0].trim().toLowerCase()).filter(Boolean);
+        const bookCities = booksSnap.docs.map(d => d.data().city?.split(',')[0].trim().toLowerCase()).filter(Boolean);
+        const derivedCities = new Set([...userCities, ...bookCities]);
+        
+        console.log("DEBUG - User Cities:", userCities);
+        console.log("DEBUG - Book Cities:", bookCities);
+        console.log("DEBUG - Derived Cities:", Array.from(derivedCities));
+        
+        setStats({
+          books: booksSnap.size,
+          cities: derivedCities.size || 0,
+          swaps: exchangesSnap.size,
+        });
+      } catch (err) {
+        console.error("Error fetching stats in App:", err);
+      }
+    };
+    fetchStats();
   }, []);
 
   const handleNavigate = (page: string) => {
@@ -191,7 +221,7 @@ export default function App() {
           onAuthClick={handleAuth}
         />
         {(currentPage === 'login' || currentPage === 'signup') ? (
-          <AuthPage mode={currentPage} onNavigate={handleNavigate} />
+          <AuthPage mode={currentPage} onNavigate={handleNavigate} booksCount={stats.books} citiesCount={stats.cities} swapsCount={stats.swaps} />
         ) : (currentPage === 'epubs' || currentPage === 'epub-library') ? (
           <div className="pt-16">
             <EpubLibrary 
@@ -215,7 +245,7 @@ export default function App() {
         ) : (
           <LandingPage onNavigate={handleNavigate} onAuthClick={handleAuth} scrollTarget={scrollTarget} />
         )}
-        <Footer onNavigate={handleNavigate} />
+        <Footer onNavigate={handleNavigate} booksCount={stats.books} citiesCount={stats.cities} />
       </div>
     );
   }

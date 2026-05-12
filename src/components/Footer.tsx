@@ -2,9 +2,11 @@ import { BookOpen, ArrowRight, Heart } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (page: string) => void;
+  booksCount?: number;
+  citiesCount?: number;
 }
 
-export default function Footer({ onNavigate }: FooterProps) {
+export default function Footer({ onNavigate, booksCount, citiesCount }: FooterProps) {
   return (
     <footer className="bg-[var(--c-bg)] px-4 pb-12 pt-8">
       <div className="max-w-7xl mx-auto nm-flat p-8 md:p-16">
@@ -35,46 +37,49 @@ export default function Footer({ onNavigate }: FooterProps) {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-bold text-[var(--c-ink)] text-xs mb-6 uppercase opacity-80">Explore</h3>
-            <ul className="space-y-4">
-              {[
-                { label: 'Home', page: 'landing' },
-                { label: 'About', page: 'about' },
-                { label: 'How It Works', page: 'how-it-works' },
-                { label: 'Community', page: 'community' },
-                { label: 'Contact', page: 'contact' },
-              ].map(link => (
-                <li key={link.page}>
-                  <button
-                    onClick={() => onNavigate(link.page)}
-                    className="group flex items-center gap-0 hover:gap-2 text-sm font-bold text-[var(--c-ink)] opacity-70 hover:opacity-100 hover:text-[var(--c-emerald-deep)] transition-all duration-300 active:scale-95"
-                  >
-                    <div className="w-0 group-hover:w-1.5 h-1.5 rounded-full bg-[var(--c-emerald-deep)] transition-all duration-300" />
-                    {link.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Explore & Resources Wrapper */}
+          <div className="grid grid-cols-2 gap-6 md:contents">
+            {/* Quick Links */}
+            <div>
+              <h3 className="font-bold text-[var(--c-ink)] text-xs mb-6 uppercase opacity-80">Explore</h3>
+              <ul className="space-y-4">
+                {[
+                  { label: 'Home', page: 'landing' },
+                  { label: 'About', page: 'about' },
+                  { label: 'How It Works', page: 'how-it-works' },
+                  { label: 'Community', page: 'community' },
+                  { label: 'Contact', page: 'contact' },
+                ].map(link => (
+                  <li key={link.page}>
+                    <button
+                      onClick={() => onNavigate(link.page)}
+                      className="group flex items-center gap-0 hover:gap-2 text-sm font-bold text-[var(--c-ink)] opacity-70 hover:opacity-100 hover:text-[var(--c-emerald-deep)] transition-all duration-300 active:scale-95"
+                    >
+                      <div className="w-0 group-hover:w-1.5 h-1.5 rounded-full bg-[var(--c-emerald-deep)] transition-all duration-300" />
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Resources */}
-          <div>
-            <h3 className="font-bold text-[var(--c-ink)] text-xs mb-6 uppercase opacity-80">Resources</h3>
-            <ul className="space-y-4">
-              {['Blog', 'Help Center', 'Privacy', 'Terms', 'API Docs'].map(item => (
-                <li key={item}>
-                  <button 
-                    onClick={() => onNavigate(item.toLowerCase().replace(' ', '-'))}
-                    className="group flex items-center gap-0 hover:gap-2 text-sm font-bold text-[var(--c-ink)] opacity-70 hover:opacity-100 hover:text-[var(--c-emerald-deep)] transition-all duration-300 active:scale-95 text-left"
-                  >
-                    <div className="w-0 group-hover:w-1.5 h-1.5 rounded-full bg-[var(--c-emerald-deep)] transition-all duration-300" />
-                    {item}
-                  </button>
-                </li>
-              ))}
-            </ul>
+            {/* Resources */}
+            <div>
+              <h3 className="font-bold text-[var(--c-ink)] text-xs mb-6 uppercase opacity-80">Resources</h3>
+              <ul className="space-y-4">
+                {['Blog', 'Help Center', 'Privacy', 'Terms', 'API Docs'].map(item => (
+                  <li key={item}>
+                    <button 
+                      onClick={() => onNavigate(item.toLowerCase().replace(' ', '-'))}
+                      className="group flex items-center gap-0 hover:gap-2 text-sm font-bold text-[var(--c-ink)] opacity-70 hover:opacity-100 hover:text-[var(--c-emerald-deep)] transition-all duration-300 active:scale-95 text-left"
+                    >
+                      <div className="w-0 group-hover:w-1.5 h-1.5 rounded-full bg-[var(--c-emerald-deep)] transition-all duration-300" />
+                      {item}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Connect */}
@@ -99,8 +104,8 @@ export default function Footer({ onNavigate }: FooterProps) {
             {/* Stats mini */}
             <div className="space-y-3 nm-inset p-4 rounded-2xl">
               {[
-                { label: 'Books', value: '50K+' },
-                { label: 'Cities', value: '200+' },
+                { label: 'Books', value: booksCount !== undefined ? `${booksCount}` : '50K+' },
+                { label: 'Cities', value: citiesCount !== undefined ? `${citiesCount}` : '200+' },
               ].map(stat => (
                 <div key={stat.label} className="flex justify-between items-center text-xs">
                   <span className="text-[var(--c-ink)] font-bold opacity-80">{stat.label}</span>
@@ -113,7 +118,7 @@ export default function Footer({ onNavigate }: FooterProps) {
 
         <div className="mt-16 pt-8 border-t border-[var(--c-ink)] border-opacity-5 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center text-xs font-bold text-[var(--c-ink)] opacity-80">
-            © 2024 BookBridge. Made with <Heart size={14} className="mx-1 text-red-500 fill-red-500" /> for readers.
+            © 2026 BookBridge. Made with <Heart size={14} className="mx-1 text-red-500 fill-red-500" /> for readers.
           </div>
           <span className="text-[10px] font-black uppercase tracking-widest text-[var(--c-ink)] opacity-70">
             Cultivating the Global Library

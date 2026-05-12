@@ -12,6 +12,27 @@ interface LandingPageProps {
 
 const FEATURES = [
   {
+    icon: BookOpen,
+    title: 'Digital Library',
+    desc: 'Upload & read EPUBs directly in browser. Share knowledge, earn points',
+    color: 'text-[var(--c-forest)]',
+    bg: 'bg-[var(--c-teal)]/20',
+  },
+  {
+    icon: Shield,
+    title: 'Real-Time Exchange Tracking',
+    desc: 'See each other on map as you head to the meeting point for safety',
+    color: 'text-[var(--c-forest)]',
+    bg: 'bg-[var(--c-emerald)]/20',
+  },
+  {
+    icon: MessageSquare,
+    title: 'Built-in Chat',
+    desc: 'Coordinate safely before your meet. No personal info shared until ready',
+    color: 'text-[var(--c-emerald)]',
+    bg: 'bg-[var(--c-mint)]/20',
+  },
+  {
     icon: MapPin,
     title: 'Location-Based Discovery',
     desc: 'Find books within your neighborhood or set a radius you\'re comfortable traveling',
@@ -24,27 +45,6 @@ const FEATURES = [
     desc: 'We match you with users who have what you want AND want what you have',
     color: 'text-[var(--c-emerald)]',
     bg: 'bg-[var(--c-teal)]/20',
-  },
-  {
-    icon: Shield,
-    title: 'Real-Time Exchange Tracking',
-    desc: 'See each other on map as you head to the meeting point for safety',
-    color: 'text-[var(--c-forest)]',
-    bg: 'bg-[var(--c-emerald)]/20',
-  },
-  {
-    icon: BookOpen,
-    title: 'Digital Library',
-    desc: 'Upload & read EPUBs directly in browser. Share knowledge, earn points',
-    color: 'text-[var(--c-forest)]',
-    bg: 'bg-[var(--c-teal)]/20',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Built-in Chat',
-    desc: 'Coordinate safely before your meet. No personal info shared until ready',
-    color: 'text-[var(--c-emerald)]',
-    bg: 'bg-[var(--c-mint)]/20',
   },
   {
     icon: Star,
@@ -66,6 +66,7 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
   const [testimonialsIdx, setTestimonialsIdx] = useState(0);
   const [testimonials, setTestimonials] = useState(TESTIMONIALS);
   const [email, setEmail] = useState('');
+  const [showAllFeatures, setShowAllFeatures] = useState(false);
   const [liveCount, setLiveCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [counter, setCounter] = useState({ books: 0, cities: 0, readers: 0, epubs: 0 });
@@ -119,7 +120,7 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
     return () => {
       revealElements.forEach(el => observer.unobserve(el));
     };
-  }, []);
+  }, [showAllFeatures]);
 
   // Real-time "Live" count (books added today)
   useEffect(() => {
@@ -374,13 +375,16 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
               </h2>
               <p className="text-[10px] sm:text-sm font-bold opacity-70 uppercase tracking-[0.4em]">POWERFUL UTILITIES FOR THE MODERN READER</p>
             </div>
-            <button className="nm-flat px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[var(--c-emerald)] hover:nm-inset transition-all mx-auto md:mx-0">
-              VIEW ALL FEATURES
+            <button 
+              onClick={() => setShowAllFeatures(!showAllFeatures)}
+              className="nm-flat px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[var(--c-emerald)] hover:nm-inset transition-all mx-auto md:mx-0"
+            >
+              {showAllFeatures ? 'SHOW LESS' : 'VIEW ALL FEATURES'}
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
-            {FEATURES.map((feature, i) => (
+            {(showAllFeatures ? FEATURES : FEATURES.slice(0, 3)).map((feature, i) => (
               <div key={i} className="nm-flat p-8 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] group hover:scale-[1.02] transition-all reveal" style={{ transitionDelay: `${i * 150}ms` }}>
                 <div className={`w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center mb-6 sm:mb-10 nm-inset rounded-xl sm:rounded-2xl text-[var(--c-emerald)] group-hover:nm-flat transition-all`}>
                   <feature.icon size={20} sm:size={24} />
@@ -394,7 +398,7 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section id="community-section" className="py-32 relative">
+      <section id="community-section" className="py-16 lg:py-32 relative">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-24 space-y-4">
             <h2 className="text-4xl md:text-5xl font-black text-[var(--c-ink)] tracking-tight uppercase leading-none">
@@ -403,8 +407,8 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
             <p className="text-sm font-bold opacity-70 uppercase tracking-[0.4em]">VOICES FROM OUR GLOBAL COMMUNITY</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-10">
-             <div className="lg:col-span-2 nm-flat p-12 md:p-20 rounded-[4rem] relative overflow-hidden reveal">
+          <div className="grid lg:grid-cols-3 gap-6 lg:gap-10">
+             <div className="lg:col-span-2 nm-flat p-6 md:p-12 lg:p-20 rounded-[2.5rem] md:rounded-[4rem] relative overflow-hidden reveal">
                 <div className="absolute top-0 right-0 p-12 opacity-5">
                    <Repeat size={200} />
                 </div>
@@ -428,13 +432,24 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
                       <div className="text-xs font-bold text-[var(--c-emerald)] uppercase tracking-widest opacity-80 mt-1">{testimonials[testimonialsIdx]?.city || 'Global'}</div>
                     </div>
                   </div>
+                  
+                  {/* Dots Indicator */}
+                  <div className="flex items-center justify-center gap-4 pt-4">
+                    {testimonials.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setTestimonialsIdx(i)}
+                        className={`h-2 rounded-full transition-all duration-500 ${i === testimonialsIdx ? 'w-12 bg-[var(--c-emerald)] nm-flat' : 'w-2 bg-[var(--c-ink)] opacity-10'}`}
+                      />
+                    ))}
+                  </div>
                 </div>
              </div>
 
-             <div className="flex flex-col gap-10">
+             <div className="hidden lg:flex flex-col gap-6 lg:gap-10">
                 {testimonials.length > 1 ? (
                   testimonials.filter((_, i) => i !== testimonialsIdx).slice(0, 2).map((t, index) => (
-                    <div key={t.id} className="nm-flat p-10 rounded-[3rem] group hover:nm-inset transition-all cursor-pointer reveal" style={{ transitionDelay: `${index * 150}ms` }} onClick={() => setTestimonialsIdx(testimonials.indexOf(t))}>
+                    <div key={t.id} className="nm-flat p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] group hover:nm-inset transition-all cursor-pointer reveal" style={{ transitionDelay: `${index * 150}ms` }} onClick={() => setTestimonialsIdx(testimonials.indexOf(t))}>
                       <p className="text-sm font-bold text-[var(--c-ink)] opacity-80 leading-relaxed mb-8">"{t.text}"</p>
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 nm-inset flex items-center justify-center font-black text-[var(--c-emerald)] rounded-xl">
@@ -456,15 +471,7 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
                   </div>
                 )}
                 
-                <div className="flex items-center justify-center gap-4 mt-auto py-6">
-                  {testimonials.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setTestimonialsIdx(i)}
-                      className={`h-2 rounded-full transition-all duration-500 ${i === testimonialsIdx ? 'w-12 bg-[var(--c-emerald)] nm-flat' : 'w-2 bg-[var(--c-ink)] opacity-10'}`}
-                    />
-                  ))}
-                </div>
+                {/* Dots indicator moved to main card */}
              </div>
           </div>
         </div>

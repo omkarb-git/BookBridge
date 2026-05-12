@@ -12,6 +12,9 @@ import { auth } from '../lib/firebase';
 interface AuthPageProps {
   mode: 'login' | 'signup';
   onNavigate: (page: string) => void;
+  booksCount?: number;
+  citiesCount?: number;
+  swapsCount?: number;
 }
 
 const AUTH_COPY = {
@@ -35,7 +38,7 @@ const AUTH_COPY = {
   },
 } as const;
 
-export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
+export default function AuthPage({ mode, onNavigate, booksCount, citiesCount, swapsCount }: AuthPageProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -78,11 +81,11 @@ export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
   };
 
   return (
-    <section className="min-h-[calc(100vh-8rem)] bg-[var(--c-bg)] py-12 px-4">
+    <section className="min-h-[calc(100vh-8rem)] bg-[var(--c-bg)] py-6 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-[1fr_0.8fr] gap-12 items-stretch">
+        <div className="grid lg:grid-cols-[1fr_0.8fr] gap-6 items-stretch">
           {/* Left Panel: Brand & Copy */}
-          <div className="hidden lg:flex nm-flat p-8 md:p-12 flex-col justify-between relative overflow-hidden">
+          <div className="hidden lg:flex nm-flat p-5 flex-col justify-between relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--c-mint)] opacity-10 blur-3xl rounded-full -mr-20 -mt-20"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-[var(--c-teal)] opacity-10 blur-3xl rounded-full -ml-20 -mb-20"></div>
             
@@ -91,31 +94,82 @@ export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
                 <BookOpen size={16} />
                 {copy.eyebrow}
               </div>
-              <h1 className="text-4xl md:text-7xl font-extrabold text-[var(--c-emerald)] leading-[1.05] uppercase tracking-tight max-w-xl">
+              <h1 className="text-3xl lg:text-4xl font-extrabold text-[var(--c-emerald)] leading-[1.05] uppercase tracking-tight max-w-xl">
                 {copy.title}
               </h1>
-              <p className="mt-8 max-w-lg text-base md:text-xl font-medium text-[var(--c-ink)] leading-relaxed opacity-70">
+              <p className="mt-4 max-w-lg text-base lg:text-lg font-medium text-[var(--c-ink)] leading-relaxed opacity-70">
                 {copy.subtitle}
               </p>
             </div>
 
-            <div className="relative z-10 grid sm:grid-cols-3 gap-6 mt-16">
+            <div className="relative z-10 grid sm:grid-cols-3 gap-4 mt-4">
               {[
-                { label: 'Nearby Swaps', value: '247 Live' },
-                { label: 'Books Listed', value: '50K+' },
-                { label: 'Cities Active', value: '200+' },
+                { label: 'Nearby Swaps', value: swapsCount !== undefined ? `${swapsCount} Live` : '247 Live' },
+                { label: 'Books Listed', value: booksCount !== undefined ? `${booksCount}` : '50K+' },
+                { label: 'Cities Active', value: citiesCount !== undefined ? `${citiesCount}` : '200+' },
               ].map((item) => (
-                <div key={item.label} className="nm-inset p-5 rounded-2xl">
+                <div key={item.label} className="nm-inset p-3 rounded-2xl">
                   <div className="text-2xl font-extrabold text-[var(--c-emerald)] uppercase">{item.value}</div>
                   <div className="text-[10px] font-bold text-[var(--c-ink)] uppercase mt-2 opacity-80">{item.label}</div>
                 </div>
               ))}
             </div>
+
+            {/* Floating Books - Arranged differently based on mode */}
+            {mode === 'login' ? (
+              <>
+                <div className="absolute top-[25%] right-10 w-28 animate-float hidden lg:block">
+                  <div className="nm-flat p-2 rounded-xl rotate-6">
+                    <div className="border-2 border-[var(--c-ink)] rounded-lg overflow-hidden">
+                      <img src="/images/a-court-of-thorns-and-roses-sarah-j-maas-9781526605399.webp" alt="Book" className="w-full h-auto object-cover" />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute top-[45%] right-40 w-28 animate-float hidden lg:block" style={{ animationDelay: '1s' }}>
+                  <div className="nm-flat p-2 rounded-xl -rotate-12">
+                    <div className="border-2 border-[var(--c-ink)] rounded-lg overflow-hidden">
+                      <img src="/images/all-your-perfects-9781668087329_hr.jpg" alt="Book" className="w-full h-auto object-cover" />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute top-[45%] right-[45%] w-22 animate-float hidden lg:block" style={{ animationDelay: '0.5s' }}>
+                  <div className="nm-flat p-2 rounded-xl rotate-12">
+                    <div className="border-2 border-[var(--c-ink)] rounded-lg overflow-hidden">
+                      <img src="/images/91Gws4BuelL._SL1500_.jpg" alt="Book" className="w-full h-auto object-cover" />
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="absolute top-[45%] right-16 w-32 animate-float hidden lg:block">
+                  <div className="nm-flat p-2 rounded-xl -rotate-6">
+                    <div className="border-2 border-[var(--c-ink)] rounded-lg overflow-hidden">
+                      <img src="/images/all-your-perfects-9781668087329_hr.jpg" alt="Book" className="w-full h-auto object-cover" />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute top-[50%] left-12 w-32 animate-float hidden lg:block" style={{ animationDelay: '1s' }}>
+                  <div className="nm-flat p-2 rounded-xl rotate-12">
+                    <div className="border-2 border-[var(--c-ink)] rounded-lg overflow-hidden">
+                      <img src="/images/a-court-of-thorns-and-roses-sarah-j-maas-9781526605399.webp" alt="Book" className="w-full h-auto object-cover" />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute top-[35%] right-[40%] w-26 animate-float hidden lg:block" style={{ animationDelay: '0.5s' }}>
+                  <div className="nm-flat p-2 rounded-xl -rotate-12">
+                    <div className="border-2 border-[var(--c-ink)] rounded-lg overflow-hidden">
+                      <img src="/images/91Gws4BuelL._SL1500_.jpg" alt="Book" className="w-full h-auto object-cover" />
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Right Panel: Form */}
-          <div className="nm-flat p-8 md:p-10">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12">
+          <div className="nm-flat p-5">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-6">
               <button
                 onClick={() => onNavigate('landing')}
                 className="text-[10px] font-bold uppercase text-[var(--c-ink)] opacity-80 hover:opacity-100 hover:text-[var(--c-emerald)] transition-all"
@@ -139,7 +193,7 @@ export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {mode === 'signup' && (
                 <div className="space-y-2">
                   <span className="block text-[10px] font-bold text-[var(--c-ink)] uppercase opacity-80 ml-2">Display Name</span>
@@ -149,7 +203,7 @@ export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Priya Sharma"
-                      className="w-full pl-14 pr-6 py-4 nm-inset focus:nm-flat transition-all outline-none font-bold text-[var(--c-ink)] rounded-2xl"
+                      className="w-full pl-14 pr-6 py-3 nm-inset focus:nm-flat transition-all outline-none font-bold text-[var(--c-ink)] rounded-2xl"
                     />
                   </div>
                 </div>
@@ -164,7 +218,7 @@ export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="reader@bookbridge.app"
-                    className="w-full pl-14 pr-6 py-4 nm-inset focus:nm-flat transition-all outline-none font-bold text-[var(--c-ink)] rounded-2xl"
+                    className="w-full pl-14 pr-6 py-3 nm-inset focus:nm-flat transition-all outline-none font-bold text-[var(--c-ink)] rounded-2xl"
                   />
                 </div>
               </div>
@@ -178,7 +232,7 @@ export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder={mode === 'signup' ? 'At least 6 characters' : 'Your password'}
-                    className="w-full pl-14 pr-6 py-4 nm-inset focus:nm-flat transition-all outline-none font-bold text-[var(--c-ink)] rounded-2xl"
+                    className="w-full pl-14 pr-6 py-3 nm-inset focus:nm-flat transition-all outline-none font-bold text-[var(--c-ink)] rounded-2xl"
                   />
                 </div>
               </div>
@@ -192,7 +246,7 @@ export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
               <button
                 onClick={handleEmailAuth}
                 disabled={isSubmitting || !email.trim() || !password.trim() || (mode === 'signup' && !name.trim())}
-                className="w-full nm-flat py-5 bg-[var(--c-emerald)] text-[var(--c-mint)] flex items-center justify-center gap-3 text-sm font-bold uppercase rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 mt-8"
+                className="w-full nm-flat py-4 bg-[var(--c-emerald)] text-[var(--c-mint)] flex items-center justify-center gap-3 text-sm font-bold uppercase rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 mt-4"
               >
                 {isSubmitting ? 'Working...' : copy.cta}
                 {!isSubmitting && <ArrowRight size={20} />}
@@ -207,7 +261,7 @@ export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
               <button
                 onClick={handleGoogleAuth}
                 disabled={isSubmitting}
-                className="w-full nm-flat py-5 bg-[var(--c-bg)] text-[var(--c-ink)] flex items-center justify-center gap-3 text-sm font-bold uppercase rounded-2xl hover:nm-inset transition-all disabled:opacity-70"
+                className="w-full nm-flat py-4 bg-[var(--c-bg)] text-[var(--c-ink)] flex items-center justify-center gap-3 text-sm font-bold uppercase rounded-2xl hover:nm-inset transition-all disabled:opacity-70"
               >
                 <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
                 Continue with Google
