@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Upload, BookOpen, Download, Search, X, Loader2, FileUp, CheckCircle2, Trash2 } from 'lucide-react';
-import { collection, doc, getDocs, query, orderBy, serverTimestamp, setDoc, deleteDoc, updateDoc, increment } from 'firebase/firestore';
+import { collection, doc, getDocs, query, orderBy, serverTimestamp, setDoc, deleteDoc, updateDoc, increment, where, addDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, uploadBytesResumable, getBlob } from 'firebase/storage';
 import { app, db, storage, auth } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -75,6 +75,22 @@ export default function EpubLibrary({ onRead }: EpubLibraryProps) {
         author: guessedAuthor || current.author,
       }));
 
+      // 1. Check Cache First
+      const cacheQuery = query(collection(db, 'book_cache'), where('searchQuery', '==', normalizedName));
+      const cacheSnap = await getDocs(cacheQuery);
+      
+      if (!cacheSnap.empty) {
+        const cacheData = cacheSnap.docs[0].data();
+        setFormData((current) => ({
+          ...current,
+          title: cacheData.title || current.title,
+          author: cacheData.author || current.author,
+          genre: cacheData.genre || current.genre,
+          description: cacheData.description || current.description,
+        }));
+        return;
+      }
+
       const candidates = Array.from(new Set([
         normalizedName,
         guessedTitle,
@@ -95,44 +111,58 @@ export default function EpubLibrary({ onRead }: EpubLibraryProps) {
 
         const [googleData, openLibraryData] = await Promise.all([googlePromise, openLibraryPromise]);
 
-        googleMatch = (googleData.items ?? []).find((item: any) => {
+        googleMatch = (googleData?.items ?? []).find((item: any) => {
           const title = item.volumeInfo?.title?.toLowerCase?.() ?? '';
           const author = item.volumeInfo?.authors?.[0]?.toLowerCase?.() ?? '';
           const candidateLower = candidate.toLowerCase();
           return candidateLower.includes(title) || title.includes(candidateLower) || candidateLower.includes(author);
-        }) ?? googleData.items?.[0] ?? googleMatch;
+        }) ?? googleData?.items?.[0] ?? googleMatch;
 
-        olMatch = (openLibraryData.docs ?? []).find((doc: any) => {
+        olMatch = (openLibraryData?.docs ?? []).find((doc: any) => {
           const title = doc.title?.toLowerCase?.() ?? '';
           const author = doc.author_name?.[0]?.toLowerCase?.() ?? '';
           const candidateLower = candidate.toLowerCase();
           return candidateLower.includes(title) || title.includes(candidateLower) || candidateLower.includes(author);
-        }) ?? openLibraryData.docs?.[0] ?? olMatch;
+        }) ?? openLibraryData?.docs?.[0] ?? olMatch;
 
         if (googleMatch?.volumeInfo?.title || olMatch?.title) {
           break;
         }
       }
 
+      let matchData: any = null;
+
       if (googleMatch?.volumeInfo?.title) {
-        setFormData((current) => ({
-          ...current,
-          title: googleMatch.volumeInfo.title || current.title,
-          author: googleMatch.volumeInfo.authors?.[0] || guessedAuthor || alternateGuessedAuthor || current.author,
-          genre: googleMatch.volumeInfo.categories?.[0] || current.genre,
-          description: googleMatch.volumeInfo.description || current.description,
-        }));
-        return;
+        matchData = {
+          title: googleMatch.volumeInfo.title || guessedTitle,
+          author: googleMatch.volumeInfo.authors?.[0] || guessedAuthor || alternateGuessedAuthor || '',
+          genre: googleMatch.volumeInfo.categories?.[0] || 'Fiction',
+          description: googleMatch.volumeInfo.description || '',
+        };
+      } else if (olMatch?.title) {
+        matchData = {
+          title: olMatch.title || guessedTitle,
+          author: olMatch.author_name?.[0] || guessedAuthor || alternateGuessedAuthor || '',
+          genre: olMatch.subject?.[0] || 'Fiction',
+          description: '', 
+        };
       }
 
-      if (olMatch?.title) {
+      if (matchData) {
         setFormData((current) => ({
           ...current,
-          title: olMatch.title || current.title,
-          author: olMatch.author_name?.[0] || guessedAuthor || alternateGuessedAuthor || current.author,
-          genre: olMatch.subject?.[0] || current.genre,
+          ...matchData
         }));
+
+        // 2. Save to Cache
+        await addDoc(collection(db, 'book_cache'), {
+          searchQuery: normalizedName,
+          ...matchData,
+          createdAt: serverTimestamp()
+        });
       }
+    } catch (error) {
+      console.error("Error in autofillFromFile:", error);
     } finally {
       setIsAutofilling(false);
     }
