@@ -227,42 +227,66 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
             </div>
 
             {/* Visual Container */}
-            <div className="relative hidden lg:block animate-fade-up" style={{ animationDelay: '0.2s' }}>
-              <div className="nm-flat w-full aspect-square rounded-[4rem] p-12 flex items-center justify-center relative overflow-hidden">
+            <div className="relative animate-fade-up mt-12 lg:mt-0" style={{ animationDelay: '0.2s' }}>
+              <div className="nm-flat w-full aspect-square rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(var(--c-teal) 2px, transparent 2px)', backgroundSize: '40px 40px' }} />
                 
-                <div className="w-64 h-64 nm-inset rounded-[3rem] flex items-center justify-center relative z-10">
-                   <BookOpen size={100} className="text-[var(--c-emerald)] opacity-20" />
+                <div className="w-32 h-32 md:w-64 md:h-64 nm-inset rounded-[1.5rem] md:rounded-[3rem] flex items-center justify-center relative z-10">
+                   <BookOpen size={50} className="text-[var(--c-emerald)] opacity-20 md:hidden" />
+                   <BookOpen size={100} className="text-[var(--c-emerald)] opacity-20 hidden md:block" />
                 </div>
-                
-                {/* Neumorphic floating cards */}
-                <div className="absolute top-20 -left-4 nm-flat p-6 rounded-3xl w-56 animate-float">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="w-10 h-10 nm-inset flex items-center justify-center rounded-xl text-[var(--c-emerald)]">
-                       <MapPin size={18} />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-[var(--c-ink)] uppercase tracking-tight">The Alchemist</div>
-                      <div className="text-[9px] font-bold opacity-70 uppercase tracking-widest mt-1">2km Away</div>
-                    </div>
-                  </div>
-                </div>
+              </div>
 
-                <div className="absolute bottom-24 -right-4 nm-flat p-6 rounded-3xl w-56 animate-float" style={{ animationDelay: '1.5s' }}>
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-10 h-10 nm-inset flex items-center justify-center rounded-xl text-orange-500">
-                       <Repeat size={18} />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-[var(--c-ink)] uppercase tracking-tight">Atomic Habits</div>
-                      <div className="text-[9px] font-bold opacity-70 uppercase tracking-widest mt-1">Mutual Match</div>
-                    </div>
-                  </div>
-                  <div className="h-1.5 w-full nm-inset rounded-full overflow-hidden">
-                    <div className="h-full bg-[var(--c-emerald)] w-3/4 rounded-full" />
+              {/* Neumorphic floating cards with shared images */}
+              <div className="absolute top-5 left-0 md:-left-16 w-32 md:w-40 animate-float">
+                <div className="nm-flat p-2 md:p-4 rounded-xl md:rounded-3xl rotate-6">
+                  <div className="border-2 md:border-4 border-[var(--c-ink)] rounded-lg md:rounded-2xl overflow-hidden">
+                    <img 
+                      src="/images/Alchemised_book_cover.webp" 
+                      alt="The Alchemist" 
+                      className="w-full h-auto object-cover"
+                    />
                   </div>
                 </div>
               </div>
+
+              <div className="absolute bottom-5 right-0 md:-right-16 w-32 md:w-40 animate-float" style={{ animationDelay: '1.5s' }}>
+                <div className="nm-flat p-2 md:p-4 rounded-xl md:rounded-3xl -rotate-6">
+                  <div className="border-2 md:border-4 border-[var(--c-ink)] rounded-lg md:rounded-2xl overflow-hidden">
+                    <img 
+                      src="/images/the-midnight-library-matt-haig.jpg" 
+                      alt="The Midnight Library" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="absolute -top-5 md:-top-10 right-0 md:right-5 w-32 md:w-40 animate-float" style={{ animationDelay: '0.5s' }}>
+                <div className="nm-flat p-2 md:p-4 rounded-xl md:rounded-3xl -rotate-12">
+                  <div className="border-2 md:border-4 border-[var(--c-ink)] rounded-lg md:rounded-2xl overflow-hidden">
+                    <img 
+                      src="/images/o-NEW-HARRY-POTTER-COVER-facebook.jpg" 
+                      alt="Harry Potter" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="absolute -bottom-5 md:-bottom-10 left-0 md:left-5 w-32 md:w-40 animate-float" style={{ animationDelay: '2s' }}>
+                <div className="nm-flat p-2 md:p-4 rounded-xl md:rounded-3xl rotate-12">
+                  <div className="border-2 md:border-4 border-[var(--c-ink)] rounded-lg md:rounded-2xl overflow-hidden">
+                    <img 
+                      src="/images/catching-fire-book-cover.jpg" 
+                      alt="Catching Fire" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+
+
             </div>
           </div>
         </div>
