@@ -155,7 +155,7 @@ export default function MessagesPage({ onNavigate }: MessagesPageProps) {
   };
 
   return (
-    <div className="h-[calc(100vh-4.5rem)] flex overflow-hidden bg-[var(--c-bg)] relative">
+    <div className="h-[calc(100dvh-4.5rem)] flex overflow-hidden bg-[var(--c-bg)] relative">
       <div className={`w-full md:w-96 flex-shrink-0 bg-transparent overflow-y-auto flex flex-col z-20 transition-all p-4 sm:p-6 space-y-4 sm:space-y-6 ${selectedConvId ? 'hidden md:flex' : 'flex'}`}>
         <div className="nm-flat p-4 sm:p-6 rounded-2xl sm:rounded-[2.5rem] bg-white sticky top-0 z-10 flex items-center justify-between">
           <div className="font-black text-[var(--c-ink)] text-sm uppercase tracking-[0.2em] flex items-center gap-4">
