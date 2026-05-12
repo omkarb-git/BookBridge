@@ -1,0 +1,19 @@
+# Logs
+*.log
+devserver-*
+
+# Dependencies
+node_modules/
+
+# Production
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor folders
+.vscode/
+.idea/
+.DS_Store
