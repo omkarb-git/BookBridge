@@ -554,19 +554,20 @@ export default function EpubLibrary({ onRead }: EpubLibraryProps) {
 
       {/* Upload Modal */}
       {showUploadModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-6">
-          <div className="nm-flat bg-white rounded-[4rem] w-full max-w-3xl overflow-hidden animate-fade-up">
-            <div className="nm-flat bg-[var(--c-bg)] p-10 flex justify-between items-center text-[var(--c-emerald)]">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6">
+          <div className="nm-flat bg-white rounded-[2rem] md:rounded-[4rem] w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col animate-fade-up">
+            <div className="nm-flat bg-[var(--c-bg)] p-6 md:p-10 flex justify-between items-center text-[var(--c-emerald)] flex-shrink-0">
               <div className="space-y-2">
-                <h2 className="text-2xl font-black uppercase tracking-tighter">DATA TRANSMISSION</h2>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80 text-[var(--c-emerald)]">EPUB UPLOAD PROTOCOL</p>
+                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter">DATA TRANSMISSION</h2>
+                <p className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] opacity-80 text-[var(--c-emerald)]">EPUB UPLOAD PROTOCOL</p>
               </div>
-              <button onClick={() => !uploading && setShowUploadModal(false)} className="w-14 h-14 rounded-2xl nm-flat flex items-center justify-center hover:nm-inset transition-all">
-                <X size={32} className="text-[var(--c-emerald)]" />
+              <button onClick={() => !uploading && setShowUploadModal(false)} className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl nm-flat flex items-center justify-center hover:nm-inset transition-all">
+                <X size={20} className="md:hidden text-[var(--c-emerald)]" />
+                <X size={32} className="hidden md:block text-[var(--c-emerald)]" />
               </button>
             </div>
             
-            <form onSubmit={handleUpload} className="p-12 space-y-10">
+            <form onSubmit={handleUpload} className="p-6 md:p-12 space-y-6 md:space-y-10 overflow-y-auto flex-1 scroll-smooth">
               {!uploading ? (
                 <>
                   {uploadError && (
@@ -582,7 +583,7 @@ export default function EpubLibrary({ onRead }: EpubLibraryProps) {
                         type="text"
                         value={formData.title}
                         onChange={(e) => setFormData({...formData, title: e.target.value})}
-                        className="w-full nm-inset rounded-[2rem] p-6 text-sm font-black uppercase tracking-tight text-[var(--c-ink)] focus:outline-none"
+                        className="w-full nm-inset rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-6 text-xs md:text-sm font-black uppercase tracking-tight text-[var(--c-ink)] focus:outline-none"
                         placeholder="ENTER TITLE..."
                       />
                     </div>
@@ -593,7 +594,7 @@ export default function EpubLibrary({ onRead }: EpubLibraryProps) {
                         type="text"
                         value={formData.author}
                         onChange={(e) => setFormData({...formData, author: e.target.value})}
-                        className="w-full nm-inset rounded-[2rem] p-6 text-sm font-black uppercase tracking-tight text-[var(--c-ink)] focus:outline-none"
+                        className="w-full nm-inset rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-6 text-xs md:text-sm font-black uppercase tracking-tight text-[var(--c-ink)] focus:outline-none"
                         placeholder="ENTER AUTHOR..."
                       />
                     </div>
@@ -632,7 +633,7 @@ export default function EpubLibrary({ onRead }: EpubLibraryProps) {
                           {selectedFile ? (
                             <>
                               <CheckCircle2 size={24} className="text-[var(--c-emerald)]" />
-                              <span className="text-[10px] font-black uppercase tracking-widest text-[var(--c-emerald)] truncate">{selectedFile.name}</span>
+                              <span className="text-[10px] font-black uppercase tracking-widest text-[var(--c-emerald)] break-all">{selectedFile.name}</span>
                             </>
                           ) : (
                             <>
@@ -665,7 +666,7 @@ export default function EpubLibrary({ onRead }: EpubLibraryProps) {
                   <button 
                     type="submit"
                     disabled={!selectedFile || !user}
-                    className="w-full nm-flat bg-[var(--c-emerald)] text-white py-6 rounded-[2rem] text-[12px] font-black uppercase tracking-[0.3em] shadow-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-20"
+                    className="w-full nm-flat bg-[var(--c-bg)] text-[var(--c-emerald)] py-6 rounded-[2rem] text-[12px] font-black uppercase tracking-[0.3em] shadow-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-20"
                   >
                     TRANSMIT TO VAULT
                   </button>
