@@ -88,7 +88,7 @@ export default function Navbar({ currentPage, onNavigate, isAuthenticated, onAut
 
   if (isAuthenticated) {
     return (
-      <nav className="sticky top-0 z-50 bg-[var(--c-bg)] p-2 sm:p-4">
+      <nav className="sticky top-0 z-50 bg-[var(--c-bg)] p-2 sm:px-4 sm:py-2">
         <div className="nm-flat px-2 sm:px-4 h-14 sm:h-16 flex items-center justify-between">
           <div className="flex items-center gap-1 sm:gap-3">
             {onToggleSidebar && (

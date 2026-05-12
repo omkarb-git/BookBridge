@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
@@ -69,6 +69,7 @@ export const LocationContext = createContext<LocationContextValue>({
 export const useLocationContext = () => useContext(LocationContext);
 
 export default function App() {
+  const mainRef = useRef<HTMLElement>(null);
   const [user, setUser] = useState<any>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState<Page>('landing');
@@ -153,13 +154,13 @@ export default function App() {
 
     if (!isAuthenticated && protectedPages.includes(targetPage)) {
       setCurrentPage('login');
-      window.scrollTo(0, 0);
+      mainRef.current?.scrollTo(0, 0);
       return;
     }
 
     setScrollTarget(null);
     setCurrentPage(targetPage);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleAuth = async (type: 'login' | 'signup') => {
@@ -217,7 +218,7 @@ export default function App() {
   // Authenticated app
   return (
     <LocationContext.Provider value={{ location, loading: geoLoading, error: geoError }}>
-      <div className="flex min-h-screen bg-[var(--c-bg)] text-[var(--c-ink)]">
+      <div className="flex h-screen bg-[var(--c-bg)] text-[var(--c-ink)]">
         <NotificationOverlay />
         <Sidebar 
           currentPage={currentPage} 
@@ -239,7 +240,7 @@ export default function App() {
             user={user}
           />
 
-          <main className={`flex-1 overflow-auto transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:pl-72' : 'lg:pl-[104px]'}`}>
+          <main ref={mainRef} className={`flex-1 ${(currentPage === 'home' || currentPage === 'discover') ? 'overflow-hidden' : 'overflow-auto scroll-smooth'} transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:pl-72' : 'lg:pl-[104px]'}`}>
             {(currentPage === 'home' || currentPage === 'discover') && <DiscoverPage onNavigate={handleNavigate} />}
             {currentPage === 'profile' && (
               <ProfilePage 

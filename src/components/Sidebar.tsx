@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Home, User, ArrowLeftRight, MessageSquare, BookOpen, Trophy, LogOut, ChevronRight, BookMarked, Plus } from 'lucide-react';
 
 interface SidebarProps {
@@ -30,6 +31,24 @@ export default function Sidebar({ currentPage, onNavigate, onLogout, isOpen, use
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join('') || 'R';
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024 && isOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   return (
     <>

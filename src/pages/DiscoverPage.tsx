@@ -312,7 +312,7 @@ export default function DiscoverPage({ onNavigate }: DiscoverPageProps) {
 
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-[var(--c-bg)] relative">
+    <div className="flex h-full overflow-hidden bg-[var(--c-bg)] relative">
       {/* Filters sidebar overlay */}
       <div className={`
         fixed inset-0 z-[2000] transition-all duration-300
@@ -392,9 +392,9 @@ export default function DiscoverPage({ onNavigate }: DiscoverPageProps) {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 p-2 sm:p-4">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 m-2 sm:m-4 nm-flat p-2 sm:p-4">
         {/* Search bar & View Toggles */}
-        <div className="nm-flat p-4 mb-2 sm:mb-6">
+        <div className="p-4 mb-2 sm:mb-6">
           <div className="flex flex-col lg:flex-row items-center gap-4 sm:gap-6 mb-2 sm:mb-4">
             <div className="flex-1 relative w-full flex items-center gap-3">
               <div className="nm-inset flex items-center px-4 sm:px-6 py-3 sm:py-4 flex-1 rounded-xl sm:rounded-2xl group transition-all focus-within:ring-2 focus-within:ring-[var(--c-emerald)]/20 border border-[var(--c-emerald)]/30">
