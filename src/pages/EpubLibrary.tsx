@@ -440,18 +440,20 @@ export default function EpubLibrary({ onRead }: EpubLibraryProps) {
             Contribute to the collective knowledge base.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <label className="nm-flat bg-[var(--c-bg)] text-[var(--c-emerald)] px-8 py-4 rounded-2xl flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-xl">
-              <Upload size={20} className="text-[var(--c-emerald)]" /> Transmit EPUB
-              <input 
-                type="file" 
-                accept=".epub"
-                className="hidden"
-                onChange={(e) => {
-                  handleFileChange(e);
-                  setShowUploadModal(true);
-                }}
-              />
-            </label>
+            {user && (
+              <label className="nm-flat bg-[var(--c-bg)] text-[var(--c-emerald)] px-8 py-4 rounded-2xl flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-xl">
+                <Upload size={20} className="text-[var(--c-emerald)]" /> Transmit EPUB
+                <input 
+                  type="file" 
+                  accept=".epub"
+                  className="hidden"
+                  onChange={(e) => {
+                    handleFileChange(e);
+                    setShowUploadModal(true);
+                  }}
+                />
+              </label>
+            )}
           </div>
         </div>
       </div>
