@@ -82,7 +82,7 @@ export default function AuthPage({ mode, onNavigate }: AuthPageProps) {
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-[1fr_0.8fr] gap-12 items-stretch">
           {/* Left Panel: Brand & Copy */}
-          <div className="nm-flat p-8 md:p-12 flex flex-col justify-between relative overflow-hidden">
+          <div className="hidden lg:flex nm-flat p-8 md:p-12 flex-col justify-between relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--c-mint)] opacity-10 blur-3xl rounded-full -mr-20 -mt-20"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-[var(--c-teal)] opacity-10 blur-3xl rounded-full -ml-20 -mb-20"></div>
             
