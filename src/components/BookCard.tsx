@@ -111,7 +111,7 @@ export default function BookCard({ book, onRequestExchange, onViewDetails, compa
 
   return (
     <>
-      <div className="nm-flat hover:scale-[1.02] transition-all flex flex-col overflow-hidden group p-2">
+      <div className="nm-flat hover:scale-[1.02] transition-all flex flex-col overflow-hidden group p-2 animate-fade-in">
         {/* Cover */}
         <div className="relative flex items-center justify-center h-[180px] sm:h-[320px] nm-inset group-hover:nm-flat transition-all p-3 sm:p-6 overflow-hidden rounded-xl">
           <div className="w-full h-full rounded-lg overflow-hidden transition-all">
