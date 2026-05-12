@@ -69,11 +69,13 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
   const [liveCount, setLiveCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [counter, setCounter] = useState({ books: 0, cities: 0, readers: 0, epubs: 0 });
+  const [statsLoading, setStatsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Fetch real data for counters
   useEffect(() => {
     const fetchStats = async () => {
+      setStatsLoading(true);
       try {
         const booksSnap = await getDocs(collection(db, 'books'));
         const epubsSnap = await getDocs(collection(db, 'epubs'));
@@ -93,10 +95,30 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
         });
       } catch (err) {
         console.error("Error fetching stats:", err);
+      } finally {
+        setStatsLoading(false);
       }
     };
 
     fetchStats();
+  }, []);
+
+  // Scroll reveal animation
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const revealElements = document.querySelectorAll('.reveal');
+    revealElements.forEach(el => observer.observe(el));
+
+    return () => {
+      revealElements.forEach(el => observer.unobserve(el));
+    };
   }, []);
 
   // Real-time "Live" count (books added today)
@@ -302,8 +324,10 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
               { val: '99%', label: 'SATISFACTION' },
               { val: counter.epubs > 1000 ? `${(counter.epubs / 1000).toFixed(1)}K+` : counter.epubs, label: 'SHARED EPUBS' },
             ].map((stat, i) => (
-              <div key={i} className="nm-inset rounded-[1.5rem] sm:rounded-[2.5rem] py-8 sm:py-12 text-center group hover:nm-flat transition-all cursor-default">
-                <div className="text-2xl sm:text-4xl font-black text-[var(--c-emerald)] tracking-tighter group-hover:scale-110 transition-transform">{stat.val}</div>
+              <div key={i} className="nm-inset rounded-[1.5rem] sm:rounded-[2.5rem] py-8 sm:py-12 text-center group hover:nm-flat transition-all cursor-default reveal" style={{ transitionDelay: `${i * 100}ms` }}>
+                <div className={`text-2xl sm:text-4xl font-black text-[var(--c-emerald)] tracking-tighter group-hover:scale-110 transition-transform ${statsLoading ? 'skeleton w-20 h-8 mx-auto' : ''}`}>
+                  {stat.val}
+                </div>
                 <div className="text-[8px] sm:text-[10px] text-[var(--c-ink)] opacity-70 font-bold uppercase tracking-[0.3em] mt-2 sm:mt-3">{stat.label}</div>
               </div>
             ))}
@@ -323,7 +347,7 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
 
           <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {STEPS.map((step, i) => (
-              <div key={i} className="group">
+              <div key={i} className="group reveal" style={{ transitionDelay: `${i * 150}ms` }}>
                 <div className="nm-flat p-8 sm:p-10 rounded-[2rem] sm:rounded-[3rem] h-full flex flex-col items-center text-center group-hover:scale-[1.02] transition-all">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 nm-inset text-[var(--c-emerald)] flex items-center justify-center mb-6 sm:mb-10 rounded-xl sm:rounded-2xl group-hover:nm-flat transition-all">
                     <step.icon size={24} />
@@ -357,7 +381,7 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
             {FEATURES.map((feature, i) => (
-              <div key={i} className="nm-flat p-8 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] group hover:scale-[1.02] transition-all">
+              <div key={i} className="nm-flat p-8 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] group hover:scale-[1.02] transition-all reveal" style={{ transitionDelay: `${i * 150}ms` }}>
                 <div className={`w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center mb-6 sm:mb-10 nm-inset rounded-xl sm:rounded-2xl text-[var(--c-emerald)] group-hover:nm-flat transition-all`}>
                   <feature.icon size={20} sm:size={24} />
                 </div>
@@ -380,7 +404,7 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
           </div>
 
           <div className="grid lg:grid-cols-3 gap-10">
-             <div className="lg:col-span-2 nm-flat p-12 md:p-20 rounded-[4rem] relative overflow-hidden">
+             <div className="lg:col-span-2 nm-flat p-12 md:p-20 rounded-[4rem] relative overflow-hidden reveal">
                 <div className="absolute top-0 right-0 p-12 opacity-5">
                    <Repeat size={200} />
                 </div>
@@ -410,7 +434,7 @@ export default function LandingPage({ onNavigate, onAuthClick, scrollTarget }: L
              <div className="flex flex-col gap-10">
                 {testimonials.length > 1 ? (
                   testimonials.filter((_, i) => i !== testimonialsIdx).slice(0, 2).map((t, index) => (
-                    <div key={t.id} className="nm-flat p-10 rounded-[3rem] group hover:nm-inset transition-all cursor-pointer" onClick={() => setTestimonialsIdx(testimonials.indexOf(t))}>
+                    <div key={t.id} className="nm-flat p-10 rounded-[3rem] group hover:nm-inset transition-all cursor-pointer reveal" style={{ transitionDelay: `${index * 150}ms` }} onClick={() => setTestimonialsIdx(testimonials.indexOf(t))}>
                       <p className="text-sm font-bold text-[var(--c-ink)] opacity-80 leading-relaxed mb-8">"{t.text}"</p>
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 nm-inset flex items-center justify-center font-black text-[var(--c-emerald)] rounded-xl">
