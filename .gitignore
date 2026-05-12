@@ -5,15 +5,14 @@ devserver-*
 # Dependencies
 node_modules/
 
-# Production
+# Build output
 dist/
 
-# Environment variables
+# Env files
 .env
 .env.local
 .env.*.local
 
-# Editor folders
+# Editor directories
 .vscode/
 .idea/
-.DS_Store
