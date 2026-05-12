@@ -169,6 +169,7 @@ export default function App() {
 
   const handleAuth = async (type: 'login' | 'signup') => {
     setCurrentPage(type);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleLogout = async () => {
