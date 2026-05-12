@@ -160,7 +160,11 @@ export default function App() {
 
     setScrollTarget(null);
     setCurrentPage(targetPage);
-    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    if (mainRef.current) {
+      mainRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleAuth = async (type: 'login' | 'signup') => {
